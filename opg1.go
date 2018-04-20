@@ -22,37 +22,34 @@ func main() {
 
 //fields lol java4e
 
-	type st1 []struct {
+	type St1 struct {
 	Dato                string `json:"Dato"`
 	Klokkeslett         string `json:"Klokkeslett"`
 	Sted                string `json:"Sted"`
 	Latitude            string `json:"Latitude"`
 	Longitude           string `json:"Longitude"`
-	AntallLedigePlasser string `json:"Antall_ledige_plasser"`
+	Antall_Ledige_Plasser string `json:"Antall_ledige_plasser"`
 }
 
 
-type st2 struct{
-	Entries []struct{
- 	East string `json:"east"`
- 	North string	`json:"north"`
- 	Zone string		`json:"zone"`
-	Latitude string `json:"Latitude"`
-	Longitude string `json:"Longitude"`
-	}`json:"entries"`
+type St2 struct {
+	Entries []struct {
+		East      string `json:"east"`
+		Zone      string `json:"zone"`
+		North     string `json:"north"`
+		Latitude  string `json:"latitude"`
+		Longitude string `json:"longitude"`
+	} `json:"entries"`
 }
 
 
-	type st3 struct {
+	type St3 struct {
 	Entries []struct {
 	Latitude    string `json:"latitude"`
 	Name        string `json:"name"`
 	Adressenavn string `json:"adressenavn"`
 	Longitude   string `json:"longitude"`
 } `json:"entries"`
-	Page  int `json:"page"`
-	Pages int `json:"pages"`
-	Posts int `json:"posts"`
 }
 
 
@@ -75,26 +72,23 @@ func path1(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	var steder []st1
+	var steder []St1
 	er := json.Unmarshal(jSonInfo, &steder)
 	if err != nil {
 		fmt.Println("error:", er)
 	}
 
-	//fp := path.Join("templates", "sted.html")
 	tmpl, err := template.ParseFiles("sted.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	for i:=0;i<len(steder);i++{
-		if err := tmpl.Execute(w, steder); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+
+	if err := tmpl.Execute(w, steder); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-
-
-}//slutt path1
+	}
+//slutt path1
 
 func path2(w http.ResponseWriter, r *http.Request) {
 
@@ -108,15 +102,19 @@ func path2(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	var lekeplasser []st2
+	var lekeplasser St2
 	er := json.Unmarshal(jSonInfo, &lekeplasser)
 	if err != nil {
 		fmt.Println("error:", er)
 	}
-	for i:=0;i<len(lekeplasser);i++ {
-		fmt.Fprintf(w, "%+v", lekeplasser[i])
+	tmpl, err := template.ParseFiles("st2.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-		fmt.Fprintln(w, "\n")
+	if err := tmpl.Execute(w, lekeplasser); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -132,11 +130,13 @@ func path3(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	var punkt []st3
+	var punkt []St3
 	er := json.Unmarshal(jSonInfo, &punkt)
 	if err != nil {
 		fmt.Println("error:", er)
 	}
+
+
 	for i:=0;i<len(punkt);i++ {
 		fmt.Fprintf(w, "%+v", punkt[i])
 		fmt.Fprintln(w, "\n")
