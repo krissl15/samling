@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title> Title </title>
+</head>
+<body>
+<h1>lekeplasser i stavanger</h1>
+{{ range .Entries}}
+<table>
+<td> {{ .East }}</td>
+<h2> {{ .Zone }}</h2>
+<h3> {{ .North }}</h3>
+<h4> {{ .Latitude }}</h4>
+<h5> {{ .Longitude }}</h5>
+</table>
+ {{end}}
+<br>
+<br>
+</body>
+</html>
